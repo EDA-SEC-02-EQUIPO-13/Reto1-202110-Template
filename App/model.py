@@ -36,13 +36,99 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
+    """
+    Inicializa el catálogo de videos. Crea una lista vacia para guardar
+    todos los videos, adicionalmente, crea una lista vacia para los nombres de los canales,
+    una lista vacia para los ids de los videos y una lista vacia para la asociación
+    categoría y videos. Retorna el catalogo inicializado.
+    """
+    catalog = {'n_videos': None,
+               'channel': None,
+               'video_id': None,
+               'category_id': None}
+
+    catalog['n_videos'] = lt.newList()
+    catalog['channel'] = lt.newList('SINGLE_LINKED',
+                                    cmpfunction=comparechannels)
+    catalog['video_id'] = lt.newList('SINGLE_LINKED',
+                                 cmpfunction=compareids)
+    catalog['category_id'] = lt.newList('SINGLE_LINKED')
+
+    return catalog
 
 # Funciones para agregar informacion al catalogo
+def addVideo(catalog, video):
+    lt.addLast(catalog['n_videos'], video)
+    channels = video['channel'].split(",")
+    for channel in channels:
+        addChannel(catalog, channel.strip(), video)
+
+def addChannel(catalog, channel_name, video):
+
+    channels = catalog['channel']
+    poschannel = lt.isPresent(channels, channel_name)
+
+    if poschannel > 0:
+        channel = lt.getElement(channels, poschannel)
+
+    else:
+        channel = newChannel
+        lt.addLast(channels)
+    
+    lt.addLast(channel['videos'], video)
+
+def addId(catalog, id):
+ 
+    t = newId(id['tag_name'], id['tag_id'])
+    lt.addLast(catalog['category_id'], t)
+
+
+def addVideoID(catalog, videoi_d):
+    """
+    Adiciona un tag a la lista de tags
+    """
+    t = newVidId(videoi_d['tag_id'], videoi_d['videos_id'])
+    lt.addLast(catalog['video_ids'], t)
 
 # Funciones para creacion de datos
+
+def newChannel(channel):
+    """
+    Crea una nueva estructura para modelar los libros de
+    un autor y su promedio de ratings
+    """
+    channel_name = {'channel': "", "videos": None,  "views": 0}
+    channel_name['channel'] = channel
+    channel_name['videos'] = lt.newList('ARRAY_LIST')
+    return channel_name
+
+def newId(name, id):
+
+    tag = {'name': '', 'tag_id': ''}
+    tag['name'] = name
+    tag['tag_id'] = id
+    return tag
+
+
+def newVidId(id, video_id):
+    """
+    Esta estructura crea una relación entre un tag y
+    los libros que han sido marcados con dicho tag.
+    """
+    videoid = {'id': id, 'book_id': video_id}
+    return videoid
+
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def comparechannels(channelname1, channel):
+    if (channelname1.lower() in channel['name'].lower()):
+        return 0
+    return -1
+
+def compareids(name, tag):
+    return (name == tag['name'])
 
 # Funciones de ordenamiento

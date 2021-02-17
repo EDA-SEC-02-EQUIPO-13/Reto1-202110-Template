@@ -39,6 +39,13 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- ")
 
+def initCatalog():
+
+    return controller.initCatalog()
+
+def loadData(catalog):
+    controller.loadData(catalog)
+
 catalog = None
 
 """
@@ -49,6 +56,13 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        loadData(catalog)
+        print('Libros cargados: ' + str(lt.size(catalog['videos'])))
+        print('Autores cargados: ' + str(lt.size(catalog['channels'])))
+        print('Géneros cargados: ' + str(lt.size(catalog['ids'])))
+        print('Asociación de Géneros a Libros cargados: ' +
+              str(lt.size(catalog['vid_ids'])))
 
     elif int(inputs[0]) == 2:
         pass
